@@ -1,14 +1,21 @@
 # Face & Eye Detection
 
 ---
+
 ###  python dlib & opencv
+
 - Face & Facial landmark detector implemented inside dlib
+
 - Produces 68 (x,y)-coordinates (specific facial structures)
+
 - These 68 points mappings were obtained by training a shape predictor on the labeled iBUG300-W dataset
+
 ![](/image/facial68.png)
 
 ### Facial Landmark Detect
+
 - import
+
 ```
 from imutils.video import VideoStream
 from imutils import face_utils
@@ -16,14 +23,20 @@ import imutils, dlib, cv2
 ```
 
 - Hog + Linear SVM (dlib.get_frontal_face_detector())
+
  - 영상에서 얼굴 검출에 사용 될 객체
+
  `detector = dlib.get_frontal_face_detector()`
+
  - 검출 된 얼굴 영상에서 랜드마크 추출
+
 `predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')`
- - 웹캠 연결
-`vs = VideoStream(0).start()`
+- 웹캠 연결
+
+ `vs = VideoStream(0).start()`
 
 - 캠 영상에서 얼굴 랜드마크 표시
+
 ```
 while True:
     # 영상 사이즈 조절
@@ -42,18 +55,24 @@ while True:
 ```
 
 - 결과 [facial_landmark_detect.py](/facial_landmark_detect.py)
+
 ![](/image/landmark.jpg)
 
 ### Facial Landmark Detect
+
 - Drowsiness Detection based on Face & Eye Detection using landmark
+
  - Using EAR(Eye Aspect Ratio)
+ 
 ![](/image/ear.jpg)
+
 ```
 def eye_aspect_ratio(eye):
     return (dist.euclidean(eye[1], eye[5]) + dist.euclidean(eye[2], eye[4])) / (2.0 * dist.euclidean(eye[0], eye[3]))
 ```
 
 - Import
+
 ```
 from scipy.spatial import distance as dist
 from imutils.video import VideoStream
@@ -64,13 +83,16 @@ import dlib, cv2
 ```
 
 - 왼쪽눈, 오른쪽눈 랜드마크 인덱스
+
 `(lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]`
 `(rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 `
 - eye aspect ratio 값이 48프레임동안 0.3 이하 일 경우 눈 감는 것으로 간주
+
 `EYE_AR_THRESH, EYE_AR_CONSEC_FRAMES = 0.3, 48`
 
 - 랜드마크에서 눈 좌표를 추출하여 눈이 감는지 체크
+
 ```
     for rect in detector(gray, 0):
         # 랜드마크 추출
@@ -97,11 +119,13 @@ import dlib, cv2
                     playsound_alarm()
 ```
 
-
 - 결과 [detect_drowsiness.py](/detect_drowsiness.py)
+
 ![](/image/drowsiness.jpg)
 
 ### 환경 설정
+
 - [Windows Anaconda 설치 및 설정](/env.md)
+
 - [pycharm 설치 및 기본 설정](/pycharm.md)
 
